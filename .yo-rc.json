@@ -1,0 +1,28 @@
+{
+  "generator-angularjs-library": {
+    "props": {
+      "author": {
+        "name": "Robin Nicollet",
+        "email": "robin.nicollet@gmail.com"
+      },
+      "libraryName": {
+        "original": "ngRights",
+        "camelized": "ngRights",
+        "dasherized": "ng-rights",
+        "slugified": "ngrights",
+        "parts": [
+          "ngrights"
+        ]
+      },
+      "includeModuleDirectives": false,
+      "includeModuleFilters": false,
+      "includeModuleServices": false,
+      "includeAngularModuleResource": false,
+      "includeAngularModuleCookies": false,
+      "includeAngularModuleSanitize": false,
+      "librarySrcDirectory": "src/ng-rights",
+      "libraryUnitTestDirectory": "test/unit/ng-rights",
+      "libraryUnitE2eDirectory": "test/e2e/ng-rights"
+    }
+  }
+}
