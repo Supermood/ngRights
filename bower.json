@@ -1,24 +1,40 @@
 {
-  "name": "ngrights",
+  "name": "ngRights",
   "version": "0.1.0",
   "authors": [
-    {
-      "name": "Robin Nicollet",
-      "email": "robin.nicollet@gmail.com"
-    }
+    "Robin Nicollet"
   ],
-  "main": ["dist/ngrights.js"],
+  "main": "dist/ng-rights.min.js",
   "ignore": [
     "src",
     "test",
     "gulpfile.js",
     "karma-*.conf.js",
-    "**/.*"
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "bower",
+    "tests"
   ],
   "dependencies": {},
   "devDependencies": {
     "angular-mocks": ">=1.2.0",
     "angular-scenario": ">=1.2.0",
     "angular": ">=1.2.0"
-  }
+  },
+  "homepage": "https://github.com/Supermood/ngRights",
+  "description": "ngRights allows to do feature-toggling, and implement front-end RBAC and ABAC policies right in the DOM.",
+  "moduleType": [],
+  "keywords": [
+    "ngRights",
+    "permissions",
+    "rights",
+    "angular",
+    "ABAC",
+    "RBAC",
+    "access",
+    "control",
+    "feature-toggling"
+  ],
+  "license": "MIT"
 }

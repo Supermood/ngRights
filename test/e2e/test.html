@@ -1,0 +1,70 @@
+<html ng-app="testApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Test page for ngRights</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+  <script src="../../src/ng-rights/ngRights.provider.js"></script>
+  <script src="../../src/ng-rights/ngRights.directive.js"></script>
+  <script src="../../src/ng-rights/ngRights.module.js"></script>
+  <script>
+    angular.module('testApp', ['ngRights']).config(['ngRightsProvider', function (ngRightsProvider) {
+      ngRightsProvider.setRules({
+        pages: {
+          posts: {
+            create: function (subject, object) { return object.ownerId === subject.id; },
+            remove: function (subject, object) { return object.ownerId === subject.id; }
+          },
+        }
+      });
+      ngRightsProvider.setSubjectGenerator(function() {
+        return {
+          id: 3
+        };
+      });
+    }]);
+    angular.module('testApp').controller('PagesController', ['ngRights', '$scope', function (ngRights, $scope) {
+      console.log('Controller sees', ngRights);
+      $scope.pages = [{
+        title: 'Page 1',
+        ownerId: 2,
+        posts: [{ content: 'This is my first post', ownerId: 2 }, { content: 'Some text lays there', ownerId: 3 }]
+      }, {
+        title: 'Page 2',
+        ownerId: 3,
+        posts: [{ content: 'Once upon a time...', ownerId: 1 }]
+      }];
+      $scope.openPage = function(page) {
+        $scope.openedPage = page;
+      };
+      $scope.addPost = function(text) {
+        $scope.openedPage.posts.push({ content: text, ownerId: 3 });
+      };
+      $scope.removePost = function(key) {
+        $scope.openedPage.posts.splice(key, 1);
+      }
+    }]);
+  </script>
+</head>
+<body>
+  <h1>ngRights Demo</h1>
+
+  <div ng-controller="PagesController">
+    <h2>Page list:</h2>
+    <div ng-repeat="page in pages">
+      <div>{{ page.title }} <button ng-click="openPage(page)">Open</button></div>
+    </div>
+    <div ng-show="openedPage">
+      <h2>Opened page</h2>
+      <div ng-show="mustShow(openedPage)">My div is shown</div>
+      <form ng-submit="addPost(newPostContent)" ng-rights="pages.posts.create(openedPage)">
+        <input type="text" ng-model="newPostContent" required>
+        <button type="submit">Add a new post</button>
+      </form>
+      <ul>
+        <li ng-repeat="(key, post) in openedPage.posts">{{ post.content }} <button ng-rights="pages.posts.remove(post)" ng-click="removePost(key)">Delete</button></li>
+      </ul>
+    </div>
+  </div>
+
+</body>
+</html>
