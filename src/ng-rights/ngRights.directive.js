@@ -66,9 +66,9 @@ angular.module('ngRightsDirective', []).directive('ngRights', ['$parse', 'ngRigh
        * on the default onErrorValue that can be setup using the ngRightsProvider.
        */
       function computeNgRights() {
+        var ngRightsShown;
         try {
           parseExpression(attributes.ngRights);
-          var ngRightsShown;
           var rule = getRule();
           if (rule) {
             ngRightsShown = rule(scope.$eval($parse(parameter))); // "not so magic anymore" line :(

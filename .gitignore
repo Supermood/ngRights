@@ -5,6 +5,7 @@
 .idea
 .project
 .settings
+coverage
 
 # Ignore node stuff
 node_modules/

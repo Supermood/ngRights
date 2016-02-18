@@ -1,8 +1,8 @@
 # ngRights
 
-ngRights is a library that allows you to easily add feature-toggling, RBAC and ABAC policies to your front-end. 
+ngRights is a library that allows you to easily add feature-toggling, RBAC and ABAC policies to your front-end.
 
-[Demo using rawgit](https://rawgit.com/Supermood/ngRights/master/test/e2e/test.html)
+[Demo using rawgit](https://rawgit.com/Supermood/ngRights/master/demo/demo.html)
 
 You can find all the details [in the wiki](https://github.com/Supermood/ngRights/wiki) where you will find the [wiki sections](https://github.com/Supermood/ngRights/wiki#plan), how to [quickstart](https://github.com/Supermood/ngRights/wiki#quickstart), how to [contribute](https://github.com/Supermood/ngRights/wiki#contributing) and the project's [timeline](https://github.com/Supermood/ngRights/wiki#timeline).
 

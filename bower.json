@@ -1,6 +1,6 @@
 {
   "name": "ngRights",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "authors": [
     "Robin Nicollet"
   ],
@@ -14,7 +14,8 @@
     "node_modules",
     "bower_components",
     "bower",
-    "tests"
+    "tests",
+    "coverage"
   ],
   "dependencies": {
     "bootstrap": "^3.3.6"
