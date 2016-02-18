@@ -46,6 +46,9 @@ describe('ngRightsProvider', function() {
     expect(ngRightsService.ruleset.first.any).to.not.exist;
     assert.isFunction(ngRightsService.ruleset.first.third.fourth, 'first.third.fourth should be a function');
     assert.isFunction(ngRightsService.ruleset.first.third.fifth, 'first.third.fourth should be a function');
+
+    assert.isFunction(ngRightsService.getRule('first.third.fourth'));
+    expect(function() { ngRightsService.getRule('first.third.nonExistent'); }).to.throw(Error);
   });
 
   it('should wrap the rules in functions correctly', function() {

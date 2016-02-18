@@ -39,27 +39,6 @@ angular.module('ngRightsDirective', []).directive('ngRights', ['$parse', 'ngRigh
       }
 
       /**
-       * GetRule uses the local identifiers to fetch the rule in the ngRights ruleset
-       * rules must be defined prior to this function call.
-       *
-       * @return {function} If the rule you are referring to exists, it will return
-       *                    that rule (a function). Otherwise, it will return null.
-       */
-      function getRule() {
-        var currentSet = ngRights.ruleset;
-        // using the identifier, go through sets
-        for (var i = 0; i < identifiers.length; i++) {
-          if (currentSet.hasOwnProperty(identifiers[i])) {
-            currentSet = currentSet[identifiers[i]];
-          } else {
-            // console.error('The rule you are looking for wasn\'t found');
-            return null;
-          }
-        }
-        return currentSet;
-      }
-
-      /**
        * This function is called every $digest and computes if the element to which
        * this directive is bound should be displayed.
        * If there is an error while computing this, it will display the element based
@@ -69,15 +48,7 @@ angular.module('ngRightsDirective', []).directive('ngRights', ['$parse', 'ngRigh
         var ngRightsShown;
         try {
           parseExpression(attributes.ngRights);
-          var rule = getRule();
-          if (rule) {
-            ngRightsShown = rule(scope.$eval($parse(parameter))); // "not so magic anymore" line :(
-            if (typeof ngRightsShown !== 'boolean') {
-              ngRightsShown = ngRights.onErrorValue;
-            }
-          } else {
-            ngRightsShown = ngRights.onErrorValue;
-          }
+          ngRightsShown = ngRights.hasRight(identifiers, scope.$eval($parse(parameter)));
         } catch(e) {
           // if we cannot compute it, it means we should hide the element
           ngRightsShown = ngRights.onErrorValue;
