@@ -2,7 +2,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Test page for ngRights</title>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+  <script src="../../bower/angular/angular.min.js"></script>
   <script src="../../src/ng-rights/ngRights.provider.js"></script>
   <script src="../../src/ng-rights/ngRights.directive.js"></script>
   <script src="../../src/ng-rights/ngRights.module.js"></script>
@@ -10,12 +10,17 @@
     angular.module('testApp', ['ngRights']).config(['ngRightsProvider', function (ngRightsProvider) {
       ngRightsProvider.setRules({
         pages: {
+          title: {
+            display: function (subject, object) { return true; }
+          },
           posts: {
             create: function (subject, object) { return object.ownerId === subject.id; },
             remove: function (subject, object) { return object.ownerId === subject.id; }
           },
         }
       });
+      //ngRightsProvider.setRulesUrl('async.js');
+      ngRightsProvider.setOnErrorDisplay(true);
       ngRightsProvider.setSubjectGenerator(function() {
         return {
           id: 3
@@ -23,7 +28,6 @@
       });
     }]);
     angular.module('testApp').controller('PagesController', ['ngRights', '$scope', function (ngRights, $scope) {
-      console.log('Controller sees', ngRights);
       $scope.pages = [{
         title: 'Page 1',
         ownerId: 2,
@@ -54,7 +58,7 @@
       <div>{{ page.title }} <button ng-click="openPage(page)">Open</button></div>
     </div>
     <div ng-show="openedPage">
-      <h2>Opened page</h2>
+      <h2 ng-rights="pages.title.display(pages[0])">Opened page</h2>
       <div ng-show="mustShow(openedPage)">My div is shown</div>
       <form ng-submit="addPost(newPostContent)" ng-rights="pages.posts.create(openedPage)">
         <input type="text" ng-model="newPostContent" required>

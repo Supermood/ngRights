@@ -1,13 +1,40 @@
 angular.module('ngRightsProvider', []).provider('ngRights', function() {
 
-  function NgRights(ruleset, subjectGenerator) {
-    this.ruleset = transformRules(ruleset, subjectGenerator);
+  function NgRights(ruleset, url, subjectGenerator, onErrorValue, $rootScope, $http) {
+    this.ruleset = {};
+    this.defaultRuleset = angular.copy(ruleset);
+    this.url = url;
     this.subjectGenerator = subjectGenerator;
-    console.log('ngRights rules are ', this.ruleset);
+    this.rootScope = $rootScope;
+    this.http = $http;
+    this.onErrorValue = onErrorValue;
+    if (this.defaultRuleset) {
+      this.ruleset = transformRules(this.defaultRuleset, subjectGenerator);
+    }
+    if (this.url) {
+      this.loadAsync(this.url);
+    }
   }
   NgRights.prototype.setRules = function (rules) {
-    this.ruleset = transformRules(rules, this.subjectGenerator);
-    console.log('ruleset is ', this.ruleset);
+    this.ruleset = transformRules(rules, this.subjectGenerator, this.onErrorValue);
+    this.rootScope.$broadcast('ngRights-update');
+  };
+  NgRights.prototype.addRules = function (rules) {
+    angular.merge(this.ruleset, transformRules(rules, this.subjectGenerator));
+    this.rootScope.$broadcast('ngRights-update');
+  };
+  NgRights.prototype.refresh = function () {
+    this.rootScope.$broadcast('ngRights-update');
+  };
+  NgRights.prototype.reload = function () {
+    if (this.url) {
+      this.loadAsync(this.url);
+    }
+  };
+  NgRights.prototype.loadAsync = function (url) {
+    this.http.get(url).then(function(data) {
+      eval('this.addRules(' + data + ')');
+    });
   };
 
   function transformRules(ruleset, subjectGenerator) {
@@ -34,18 +61,26 @@ angular.module('ngRightsProvider', []).provider('ngRights', function() {
     return transformedRules;
   }
 
-  var defaultRuleset = {};
+  var defaultRuleset = null;
   var subjectGenerator = null;
+  var rulesUrl = null;
+  var onErrorValue = false;
 
   this.setRules = function (ruleset) {
     defaultRuleset = ruleset;
   };
+  this.setRulesUrl = function (url) {
+    rulesUrl = url;
+  };
   this.setSubjectGenerator = function (generator) {
     subjectGenerator = generator;
   };
-
-  this.$get = function() {
-    console.log('default rules are ', defaultRuleset);
-    return new NgRights(defaultRuleset, subjectGenerator);
+  this.setOnErrorDisplay = function (value) {
+    onErrorValue = value;
   };
+
+  this.$get = ['$rootScope', '$http', function($rootScope, $http) {
+    window.ngRights = new NgRights(defaultRuleset, rulesUrl, subjectGenerator, onErrorValue, $rootScope, $http);
+    return window.ngRights;
+  }];
 });
