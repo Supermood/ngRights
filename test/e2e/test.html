@@ -2,71 +2,93 @@
 <head>
   <meta charset="UTF-8">
   <title>Test page for ngRights</title>
-  <script src="../../bower/angular/angular.min.js"></script>
-  <script src="../../src/ng-rights/ngRights.provider.js"></script>
-  <script src="../../src/ng-rights/ngRights.directive.js"></script>
-  <script src="../../src/ng-rights/ngRights.module.js"></script>
-  <script>
-    angular.module('testApp', ['ngRights']).config(['ngRightsProvider', function (ngRightsProvider) {
-      ngRightsProvider.setRules({
-        pages: {
-          title: {
-            display: function (subject, object) { return true; }
-          },
-          posts: {
-            create: function (subject, object) { return object.ownerId === subject.id; },
-            remove: function (subject, object) { return object.ownerId === subject.id; }
-          },
-        }
-      });
-      //ngRightsProvider.setRulesUrl('async.js');
-      ngRightsProvider.setOnErrorDisplay(true);
-      ngRightsProvider.setSubjectGenerator(function() {
-        return {
-          id: 3
-        };
-      });
-    }]);
-    angular.module('testApp').controller('PagesController', ['ngRights', '$scope', function (ngRights, $scope) {
-      $scope.pages = [{
-        title: 'Page 1',
-        ownerId: 2,
-        posts: [{ content: 'This is my first post', ownerId: 2 }, { content: 'Some text lays there', ownerId: 3 }]
-      }, {
-        title: 'Page 2',
-        ownerId: 3,
-        posts: [{ content: 'Once upon a time...', ownerId: 1 }]
-      }];
-      $scope.openPage = function(page) {
-        $scope.openedPage = page;
-      };
-      $scope.addPost = function(text) {
-        $scope.openedPage.posts.push({ content: text, ownerId: 3 });
-      };
-      $scope.removePost = function(key) {
-        $scope.openedPage.posts.splice(key, 1);
-      }
-    }]);
-  </script>
+  <script src="/bower/angular/angular.min.js"></script>
+  <script src="/src/ng-rights/ngRights.provider.js"></script>
+  <script src="/src/ng-rights/ngRights.directive.js"></script>
+  <script src="/src/ng-rights/ngRights.module.js"></script>
+  <script src="test.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="/bower/bootstrap/dist/css/bootstrap.min.css">
+
+  <style type="text/css">
+  [ng-click] {
+    cursor: pointer;
+  }
+  .page-link:hover {
+    background-color: #eeeeee;
+  }
+  .delete-post {
+    float: right;
+  }
+  </style>
 </head>
 <body>
-  <h1>ngRights Demo</h1>
-
-  <div ng-controller="PagesController">
-    <h2>Page list:</h2>
-    <div ng-repeat="page in pages">
-      <div>{{ page.title }} <button ng-click="openPage(page)">Open</button></div>
-    </div>
-    <div ng-show="openedPage">
-      <h2 ng-rights="pages.title.display(pages[0])">Opened page</h2>
-      <div ng-show="mustShow(openedPage)">My div is shown</div>
-      <form ng-submit="addPost(newPostContent)" ng-rights="pages.posts.create(openedPage)">
-        <input type="text" ng-model="newPostContent" required>
-        <button type="submit">Add a new post</button>
-      </form>
-      <ul>
-        <li ng-repeat="(key, post) in openedPage.posts">{{ post.content }} <button ng-rights="pages.posts.remove(post)" ng-click="removePost(key)">Delete</button></li>
-      </ul>
+  <div class="container">
+    <h1 class="page-header">ngRights Demo</h1>
+    <p class="lead">ngRights allows you to easily conditionnaly show and hide DOM elements according to the current logged in user.</p>
+    <p>
+    In this scenario, you host a website that hosts pages for its users. Every page belongs to a user through its ownerId attribute.
+    Every page contains posts, which are usually written by the page owner. Sometimes however, a post may be written by someone else. </p>
+    <p>On this website, only users that own posts can delete them. This means that a page owner cannot delete a post that does not belong to him, even if he's the page owner.
+    </p>
+    You are connected as <strong>Bob<strong>, and your user ID is 3.
+    </p>
+    <div ng-controller="PagesController">
+      <h2>Browse pages (click on a page to open it)</h2>
+      <table id="pages-list" class="table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Number of posts</th>
+            <th>Owner</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="page in pages" class="page-link" ng-click="openPage(page)">
+            <td>{{ page.title }}</td>
+            <td>{{ page.posts.length }}</td>
+            <td>{{ page.owner }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <br>
+      <div id="page" ng-show="openedPage">
+        <h2 ng-rights="pages.title.display(openedPage)">Page : {{ openedPage.title }}</h2>
+        <div class="posts">
+          <h4>Posts</h4>
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width: 1px">Writer</th>
+                <th>Intro</th>
+                <th style="width: 1px"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="post" ng-repeat="(key, post) in openedPage.posts">
+                <td>{{ post.owner }}</td>
+                <td>{{ post.content }}</td>
+                <td><button ng-rights="pages.posts.remove(post)" class="btn btn-danger delete-post" ng-click="removePost(key)">delete post</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <br>
+        <div ng-rights="pages.posts.create(openedPage)">
+          <h4>Add a post</h4>
+          <form ng-submit="addPost(newPostContent)">
+            <div class="form-group">
+              <label>Post content :</label>
+              <textarea ng-model="newPostContent" class="form-control" placeholder="Once upon a time..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Add this post</button>
+          </form>
+        </div>
+      </div>
+      <br>
+      <br>
+      <br>
+      <br>
     </div>
   </div>
 
