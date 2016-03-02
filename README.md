@@ -13,7 +13,7 @@ The Quickstart section is repeated here for simplicity:
 #### 2. Define rights
 ```javascript
 app.config(['ngRightsProvider', function(ngRightsProvider) {
-  ngRightsProvider.setRights({
+  ngRightsProvider.setRules({
     page: {
       post: {
         create: function(subject, page) { return page.ownerId == subject.id; }
