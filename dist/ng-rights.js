@@ -64,7 +64,7 @@ angular.module('ngRightsDirective', []).directive('ngRights', ['$parse', 'ngRigh
           // if we cannot compute it, it means we should hide the element
           ngRightsShown = ngRights.onErrorValue;
         }
-        element.css('display', ngRightsShown ? 'inherit' : 'none');
+        element.css('display', ngRightsShown ? '' : 'none');
       }
 
       scope.$on('ngRights-update', computeNgRights);
@@ -107,7 +107,7 @@ angular.module('ngRightsProvider', []).provider('ngRights', function() {
   };
 
   /**
-   * GetRule uses the local identifiers to fetch the rule in the ngRights ruleset
+   * GetRule uses the given identifiers to fetch the rule in the ngRights ruleset
    * rules must be defined prior to this function call.
    *
    * @param {string|Array} identifiers Array of strings or dot-separated string

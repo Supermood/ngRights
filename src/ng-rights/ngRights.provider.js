@@ -31,7 +31,7 @@ angular.module('ngRightsProvider', []).provider('ngRights', function() {
   };
 
   /**
-   * GetRule uses the local identifiers to fetch the rule in the ngRights ruleset
+   * GetRule uses the given identifiers to fetch the rule in the ngRights ruleset
    * rules must be defined prior to this function call.
    *
    * @param {string|Array} identifiers Array of strings or dot-separated string

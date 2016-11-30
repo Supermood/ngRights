@@ -53,7 +53,7 @@ angular.module('ngRightsDirective', []).directive('ngRights', ['$parse', 'ngRigh
           // if we cannot compute it, it means we should hide the element
           ngRightsShown = ngRights.onErrorValue;
         }
-        element.css('display', ngRightsShown ? 'inherit' : 'none');
+        element.css('display', ngRightsShown ? '' : 'none');
       }
 
       scope.$on('ngRights-update', computeNgRights);
